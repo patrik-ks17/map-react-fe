@@ -57,12 +57,17 @@ export default function Home() {
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
     libraries,
   });
+  
+
   const [markers, setMarkers] = useState([]);
-	  fetch("http://localhost:9000/markers/63d3a08f86b7d699776ca56c")
-		 .then((res) => res.json())
-		 .then((resp) => setMarkers(resp.markers)
-		 )
-		 .catch(console.log)
+  useEffect(() => {
+    async function fetchMarkers() {
+      const response = await fetch("http://localhost:9000/markers/63d3a08f86b7d699776ca56c")
+      const json = await response.json();
+      setMarkers(json.markers);
+      }
+  })
+
 
   const [selected, setSelected] = useState(null);
   const [timerange, setTimerange] = useState(['10:00', '11:00']);
