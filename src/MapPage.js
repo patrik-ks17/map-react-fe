@@ -11,6 +11,7 @@ import TimeRangePicker from "@wojtekmaj/react-timerange-picker";
 import Search from "./components/Search";
 import Locate from "./components/Locate";
 
+
 const libraries = ["places"];
 const mapContainerStyle = {
   width: "150vh",
@@ -25,6 +26,8 @@ const options = {
   disableDefaultUI: true,
   zoomControl: true,
 };
+let id = "63d3a0b686b7d699776ca56d"
+
 
 export default function MapPage() {
   const { isLoaded, loadError } = useLoadScript({
@@ -35,22 +38,23 @@ export default function MapPage() {
   const [markers, setMarkers] = useState([]);
   const [selected, setSelected] = useState(null); 
   const [timerange, setTimerange] = useState(["",""]);
+  const [users, setUsers] = useState([]);
 
-  async function fetchMarkers() {
+  async function fetchMarkers(id) {
     const response = await fetch(
-      "http://localhost:9000/markers/63d7924d1b5708dd2fe01f70"
+      `http://localhost:9000/markers/${id}`
     );
     const json = await response.json();
     setMarkers(json.markers);
   }
   useEffect(() => {
-    fetchMarkers();
+    fetchMarkers(id);
   }, []);
 
-  async function updateMarkers(selected) {
+  async function updateMarkers(selected, id) {
     const body = JSON.stringify(selected);
     const response = await fetch(
-      `http://localhost:9000/markers/63d7924d1b5708dd2fe01f70`,
+      `http://localhost:9000/markers/${id}`,
       {
         method: "POST",
         body: body,
@@ -65,10 +69,10 @@ export default function MapPage() {
     }
   }
 
-  async function deleteMarker(selected) {
+  async function deleteMarker(selected, id) {
     const body = JSON.stringify(selected);
     const response = await fetch(
-      `http://localhost:9000/markers/63d7924d1b5708dd2fe01f70`,
+      `http://localhost:9000/markers/${id}`,
       {
         method: "DELETE",
         body: body,
@@ -85,7 +89,7 @@ export default function MapPage() {
 
   const onMapClick = useCallback((event) => {
     const sport = document.querySelector("form[id='markerform'] input[name='sport']").value;
-    if (sport == "") {
+    if (sport === "") {
       alert("Please add a Sport to your marker");
       return;
     } else {
@@ -105,7 +109,7 @@ export default function MapPage() {
     markers.map((marker, index) => {
       if (JSON.stringify(marker) === JSON.stringify(selected)) {
         delete markers[index];
-        deleteMarker(selected);
+        deleteMarker(selected, id);
         setSelected(null);
       }
     });
@@ -116,12 +120,12 @@ export default function MapPage() {
       "form[id='markerform'] input[name='sport']"
     ).value;
     markers.map((marker, index) => {
-      if (marker.lat == selected.lat && marker.lng == selected.lng) {
+      if (marker.lat === selected.lat && marker.lng === selected.lng) {
         markers[index].sport = sport;
         markers[index].timerange = timerange;
       }
     });
-    updateMarkers(selected);
+    updateMarkers(selected, id);
   }
 
   const mapRef = useRef();
@@ -133,10 +137,25 @@ export default function MapPage() {
     mapRef.current.panTo({ lat, lng });
     mapRef.current.setZoom(14);
   }, []);
+  
+  // ----------------------------------------------------
+	async function fetchUsers() {
+		const response = await fetch(
+		  "http://localhost:9000/users"
+		);
+		const json = await response.json();
+		setUsers(json)
+	}
+	useEffect(() => {
+		fetchUsers();
+	});
 
-  if (loadError) return "Error loading maps";
-  if (!isLoaded) return "Loading Maps";
 
+
+
+	
+	if (loadError) return "Error loading maps";
+	if (!isLoaded) return "Loading Maps";
   return (
     <div>
       {/* Menu bar */}
@@ -147,8 +166,34 @@ export default function MapPage() {
       </div>
 
       <div style={{ display: "flex" }}>
+			{/* Users list */}
+			<div className="users-list">
+				<ul>
+					{users.map((user, index) => {
+						return (
+							<div key={index} className="user-box" onClick={() => { 
+								id = user._id;
+								fetchMarkers(user._id)
+							}}
+							>
+								<li key={user._id}>{user.username}</li>
+								<ul>
+									{user.markers.map((marker, index) => {
+										return (
+											<li key={index}>
+												<p>lat: {marker.lat}</p>
+												<p>lng: {marker.lng}</p>
+											</li>
+										)
+									})}
+								</ul>
+							</div>
+						)
+					})}
+				</ul>
+			</div>
         {/* Google Map */}
-        <div style={{ width: "50%" }}>
+        <div className="google-map">
           <GoogleMap
             mapContainerStyle={mapContainerStyle}
             zoom={7}

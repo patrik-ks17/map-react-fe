@@ -56,3 +56,17 @@ form > span, button {
 form > button {
   margin-top: 10px;
 }
+
+.users-list {
+  max-height: 300px;
+  overflow-y: auto;
+}
+.user-box:hover {
+  transform: scale(1.2);
+  animation-duration: 2s;
+}
+
+.user-box {
+  border: 2px solid #000;
+  background-color: beige;
+}
