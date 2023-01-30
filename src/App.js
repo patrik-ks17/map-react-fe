@@ -1,9 +1,9 @@
-import Home from './Home';
+import MapPage from './MapPage';
 import './style/App.css';
 
 function App() {
   return (
-    <Home/>
+    <MapPage/>
   );
 }
 
