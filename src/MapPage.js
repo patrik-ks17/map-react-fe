@@ -1,3 +1,4 @@
+/* #region  Imports */
 import { useCallback, useState, useRef, useEffect } from "react";
 import {
   GoogleMap,
@@ -7,127 +8,230 @@ import {
 } from "@react-google-maps/api";
 import "@reach/combobox/styles.css";
 import mapStyles from "./mapStyles";
-import TimeRangePicker from "@wojtekmaj/react-timerange-picker";
 import Search from "./components/Search";
 import Locate from "./components/Locate";
+import TimePicker from "react-time-picker";
+import "./style/mapPagestyle.css"
+/* #endregion */
 
-
+/* #region  Constans */
 const libraries = ["places"];
 const mapContainerStyle = {
   width: "150vh",
   height: "60vh",
 };
 const center = {
-  lat: 47.22238413761323,
-  lng: 19.1766162408318,
+  lat: parseFloat(47.22238413761323),
+  lng: parseFloat(19.1766162408318),
 };
 const options = {
   styles: mapStyles,
   disableDefaultUI: true,
   zoomControl: true,
 };
-let id = "63d3a0b686b7d699776ca56d"
-
+/* #endregion */
 
 export default function MapPage() {
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
     libraries,
-  });  
-
-  const [markers, setMarkers] = useState([]);
-  const [selected, setSelected] = useState(null); 
-  const [timerange, setTimerange] = useState(["",""]);
+  });
+  const [loggedUser, setLoggedUser] = useState();
   const [users, setUsers] = useState([]);
+  const [markers, setMarkers] = useState([{}]);
+  const [selected, setSelected] = useState({});
+  const [startTime, setStartTime] = useState("0:00");
+  const [endTime, setEndTime] = useState("0:00");
+  const [showingInfo, setSInfo] = useState(false);
+  const [markerPending, setMarkerPending] = useState({});
 
-  async function fetchMarkers(id) {
-    const response = await fetch(
-      `http://localhost:9000/markers/${id}`
-    );
-    const json = await response.json();
-    setMarkers(json.markers);
-  }
+  /* #region  Fetching */
+  // get markers
   useEffect(() => {
-    fetchMarkers(id);
-  }, []);
-
-  async function updateMarkers(selected, id) {
-    const body = JSON.stringify(selected);
-    const response = await fetch(
-      `http://localhost:9000/markers/${id}`,
-      {
+    async function fetchMarkers() {
+      fetch(`http://localhost:9000/get-userdata`, {
         method: "POST",
-        body: body,
+        crossDomain: true,
         headers: {
-          "content-type": "application/json",
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          "Access-Control-Allow-Origin": "*",
         },
-      }
-    );
-    if (!response.ok) {
-      alert("Failed to add marker");
-      return;
+        body: JSON.stringify({
+          token: window.localStorage.getItem("token"),
+        }),
+      })
+        .then((response) =>
+          !response.ok ? alert("Sikertelen lekérdezés") : response.json()
+        )
+        .then((data) => {
+          setMarkers(data.data.markers);
+          setLoggedUser(data.data);
+        });
     }
-  }
-
-  async function deleteMarker(selected, id) {
-    const body = JSON.stringify(selected);
-    const response = await fetch(
-      `http://localhost:9000/markers/${id}`,
-      {
-        method: "DELETE",
-        body: body,
-        headers: {
-          "content-type": "application/json",
-        },
-      }
-    );
-    if (!response.ok) {
-      alert("Failed to delete marker");
-      return;
-    }
-  }
-
-  const onMapClick = useCallback((event) => {
-    const sport = document.querySelector("form[id='markerform'] input[name='sport']").value;
-    if (sport === "") {
-      alert("Please add a Sport to your marker");
-      return;
-    } else {
-      setMarkers((current) => [
-        ...current,
-        {
-          lat: event.latLng.lat(),
-          lng: event.latLng.lng(),
-          sport: null,
-          timerange: ["00:00","00:00"],
-        },
-      ]);
-    }
+    fetchMarkers();
   }, []);
 
-  function removeMarker() {
+  // get all data
+  useEffect(() => {
+    async function fetchUsers() {
+      const response = await fetch(`http://localhost:9000/get-alldata`, {
+        method: "POST",
+        crossDomain: true,
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+        body: JSON.stringify({
+          token: window.localStorage.getItem("token"),
+        }),
+      });
+      if (!response.ok) {
+        alert("Sikertelen adat lekérdezés");
+        return;
+      }
+      const json = await response.json();
+      setUsers(json.data);
+    }
+    fetchUsers();
+  }, []);
+
+  async function pushMarker(selected) {
+    const response = await fetch(`http://localhost:9000/add-marker`, {
+      method: "POST",
+      crossDomain: true,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+      body: JSON.stringify({
+        token: window.localStorage.getItem("token"),
+        selected,
+      }),
+    });
+    if (!response.ok) {
+      alert("Marker hozzáadás sikertelen");
+      return;
+    }
+    // const json = await response.json();
+  }
+
+  async function deleteMarker(selected) {
+    const response = await fetch(`http://localhost:9000/delete-marker`, {
+      method: "POST",
+      crossDomain: true,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+      body: JSON.stringify({
+        token: window.localStorage.getItem("token"),
+        selected,
+      }),
+    });
+    if (!response.ok) {
+      alert("Marker törlése sikertelen");
+      return;
+    }
+    //const json = await response.json();
+  }
+  /* #endregion */
+
+  /* #region Functions  */
+  const onMapClick = (event) => {
+    if (Object.keys(markerPending).length === 0) {
+      const sport = document.querySelector(
+        "form[id='markerform'] input[name='sport']"
+      ).value;
+      if (sport === "") {
+        alert("Add meg a sport tevékenységet!");
+        return;
+      } else if (startTime === "0:00" || endTime === "0:00") {
+        alert("Add meg az időpontot!");
+        return;
+      } else {
+        const timerange = {
+          start: startTime,
+          end: endTime,
+        };
+        const newMarker = {
+          lat: parseFloat(event.latLng.lat()),
+          lng: parseFloat(event.latLng.lng()),
+          sport: sport,
+          time: timerange,
+        };
+        setSelected(newMarker);
+        setMarkerPending(newMarker);
+        setSInfo(true);
+        setMarkers((current) => [...current, newMarker]);
+      }
+    }
+    else {
+      return alert("Van kijelölt marker!");
+    }
+  };
+
+  function lc_removeMarker() {
     markers.map((marker, index) => {
       if (JSON.stringify(marker) === JSON.stringify(selected)) {
-        delete markers[index];
-        deleteMarker(selected, id);
-        setSelected(null);
+        markers.splice(index, 1);
+        deleteMarker(selected);
+        setSelected({});
+        if (JSON.stringify(marker) === JSON.stringify(markerPending)) {
+          setMarkerPending({});
+        }
       }
     });
   }
 
-  function addMarker() {
+  function lc_editMarker() {
     const sport = document.querySelector(
       "form[id='markerform'] input[name='sport']"
     ).value;
+    const timerange = {
+      start: startTime,
+      end: endTime,
+    };
     markers.map((marker, index) => {
       if (marker.lat === selected.lat && marker.lng === selected.lng) {
         markers[index].sport = sport;
-        markers[index].timerange = timerange;
+        markers[index].time = timerange;
       }
     });
-    updateMarkers(selected, id);
+    pushMarker(selected);
+    setSelected({});
+    setMarkerPending({});
   }
 
+  function Information() {
+    if (showingInfo && Object.keys(selected).length > 0) {
+    return (
+      <InfoWindowF
+        position={{ lat: selected.lat, lng: selected.lng }}
+        onCloseClick={() => {
+          setSInfo(false)
+        }}
+      >
+        <div>
+          <h2>
+            <span>{selected.sport}</span>
+          </h2>
+          <p>{selected.time.start + " - " + selected.time.end}</p>
+          <button onClick={lc_removeMarker}>Törlés</button>
+        </div>
+      </InfoWindowF>
+    );}
+    return null;
+  }
+
+
+
+  /* #endregion */
+
+  /* #region  Locate Me */
   const mapRef = useRef();
   const onMapLoad = useCallback((map) => {
     mapRef.current = map;
@@ -137,25 +241,10 @@ export default function MapPage() {
     mapRef.current.panTo({ lat, lng });
     mapRef.current.setZoom(14);
   }, []);
-  
-  // ----------------------------------------------------
-	async function fetchUsers() {
-		const response = await fetch(
-		  "http://localhost:9000/users"
-		);
-		const json = await response.json();
-		setUsers(json)
-	}
-	useEffect(() => {
-		fetchUsers();
-	});
+  /* #endregion */
 
-
-
-
-	
-	if (loadError) return "Error loading maps";
-	if (!isLoaded) return "Loading Maps";
+  if (loadError) return "Error loading maps";
+  if (!isLoaded) return "Loading Maps";
   return (
     <div>
       {/* Menu bar */}
@@ -165,33 +254,38 @@ export default function MapPage() {
         <Locate panTo={panTo} />
       </div>
 
-      <div style={{ display: "flex" }}>
-			{/* Users list */}
-			<div className="users-list">
-				<ul>
-					{users.map((user, index) => {
-						return (
-							<div key={index} className="user-box" onClick={() => { 
-								id = user._id;
-								fetchMarkers(user._id)
-							}}
-							>
-								<li key={user._id}>{user.username}</li>
-								<ul>
-									{user.markers.map((marker, index) => {
-										return (
-											<li key={index}>
-												<p>lat: {marker.lat}</p>
-												<p>lng: {marker.lng}</p>
-											</li>
-										)
-									})}
-								</ul>
-							</div>
-						)
-					})}
-				</ul>
-			</div>
+      <div className="Main">
+        {/* Users list */}
+        <div className="users-list">
+          <button onClick={() => setMarkers(loggedUser.markers)}>MY markers</button>
+          <div>
+            <ul>
+              {users.map((user, index) => {
+                return (
+                  <div
+                    key={index}
+                    className="user-box"
+                    onClick={() => {
+                      setMarkers(user.markers)
+                    }}
+                  >
+                    <span key={user._id}>{user.username}</span>
+                    <ul>
+                      {user.markers.map((marker, index) => {
+                        return (
+                          <li className="listed-marker" key={index}>
+                            <span>{marker.sport}</span>
+                            <span>{marker.time.start + " - " + marker.time.end}</span>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </div>
+                );
+              })}
+            </ul>
+          </div>
+        </div>
         {/* Google Map */}
         <div className="google-map">
           <GoogleMap
@@ -206,31 +300,16 @@ export default function MapPage() {
               <Marker
                 key={index}
                 position={{
-                  lat: marker.lat,
-                  lng: marker.lng,
+                  lat: parseFloat(marker.lat),
+                  lng: parseFloat(marker.lng),
                 }}
                 onClick={() => {
                   setSelected(marker);
+                  setSInfo(true);
                 }}
               />
             ))}
-
-            {selected ? (
-              <InfoWindowF
-                position={{ lat: selected.lat, lng: selected.lng }}
-                onCloseClick={() => {
-                  setSelected(null);
-                }}
-              >
-                <div>
-                  <h2>
-                    <span>{selected.sport}</span>
-                  </h2>
-                  <p>{selected.timerange[0] + " - " + selected.timerange[1]}</p>
-                  <button onClick={removeMarker}>Törlés</button>
-                </div>
-              </InfoWindowF>
-            ) : null}
+            <Information />
           </GoogleMap>
         </div>
         {/* Marker Settings */}
@@ -238,13 +317,19 @@ export default function MapPage() {
           <form id="markerform">
             <span>Sport</span>
             <input type={"text"} name={"sport"} defaultValue=""></input>
-            <span>Schedule</span>
-            <TimeRangePicker
+            <span>Kezdés</span>
+            <TimePicker
               disableClock
-              onChange={setTimerange}
-				  value={timerange}
-				  />
-            <button type={"button"} onClick={addMarker}>
+              onChange={setStartTime}
+              value={startTime}
+            />
+            <span>Vége</span>
+            <TimePicker
+              disableClock
+              onChange={(e) => setEndTime(e)}
+              value={endTime}
+            />
+            <button type={"button"} onClick={lc_editMarker}>
               Felvesz
             </button>
           </form>

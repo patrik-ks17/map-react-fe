@@ -1,0 +1,111 @@
+/* Menu bar */
+.functions {
+  width: 100vw;
+  display: inline-flex;
+  margin-bottom: 0.2rem;
+}
+
+h1 {
+	color: whitesmoke;
+	z-index: 10;
+	margin: 0;
+	padding: 0;
+}
+
+.search {
+  margin-left: 50px;
+  width: 100%;
+  max-width: 400px;
+  z-index: 10;
+}
+.search input {
+	padding: 0.5rem;
+	font-size: 1.5rem;
+	width: 100%;
+}
+
+.locate {
+	margin-left: 50px;
+	background: #f6f6f6;
+	border: none;
+	z-index: 10;
+}
+.locate img {
+	width: 30px;
+	cursor: pointer;
+}
+
+/* Map & Page */
+.Main {
+  display: flex;
+}
+.google-map {
+	max-width: 40rem;
+}
+
+
+
+
+/* users list */
+.users-list {
+  background-color: rgb(177, 210, 239);
+  font-size: 1rem;
+  max-height: 25rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+  margin-left: 0.6rem;
+  margin-right: 0.6rem;
+  max-width: 18rem;
+}
+.users-list > button {
+	z-index: 5;
+	top: 0;	
+	position: sticky;
+	margin: auto;
+	margin-bottom: 0.2rem;
+}
+.users-list > div {
+	font-size: 0.7rem;
+	margin: auto;	
+}
+
+.user-box {
+  color: whitesmoke;
+  border: 2px solid #000;
+  background-color: rgb(98, 98, 98);
+  margin: 0.2rem;
+}
+.user-box:hover {
+  transform: scale(1.2);
+  animation-duration: 2s;
+  width:fit-content;
+}
+.user-box > ul {
+	list-style-type: none;
+}
+.user-box li {
+	border-bottom: 1px solid #000;
+}
+.listed-marker span{
+	display:block;
+	margin-right: 3rem;
+}
+.listed-marker:hover {
+	transform: scale(1.2);
+	animation-duration: 2s;
+	width:fit-content;
+}
+
+
+/* marker settings */
+#markerform > span,
+button {
+  display: block;
+}
+
+#markerform > button {
+  margin-top: 10px;
+}
+
+
+
