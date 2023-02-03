@@ -8,13 +8,14 @@ export default function Locate({ panTo }) {
 				 panTo({
 					lat: position.coords.latitude,
 					lng: position.coords.longitude,
-				 });
+				 }, 14);
 			  },
-			  () => null
+			  (error) => console.log(error)
 			);
 		 }}
 	  >
-		 <img style={{width: '60px'}} src="icon/location.png" alt="compass - locate me" />
+		 <img src="icon/location.png" alt="compass - locate me" />
+		 <span>My location</span>
 	  </button>
 	);
  }

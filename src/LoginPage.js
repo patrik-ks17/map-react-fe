@@ -1,7 +1,9 @@
 import React, {useState} from 'react'
 import {useNavigate} from "react-router-dom"
+import { useAlert } from 'react-alert'
 
-function LoginPage(props) {
+function LoginPage() {
+	const alert = useAlert()	
 	const navigate = useNavigate();
 	const initialValues = {user: "", password: ""};
   	const [formValues, setFormValues] = useState(initialValues)
@@ -29,9 +31,11 @@ function LoginPage(props) {
         .then((res) => res.json())
         .then(data => {
 			if (data.status=="ok") { 
-				alert("Belépés sikeres")
 				window.localStorage.setItem("token",data.data);
-				navigate("/mappage")
+				alert.success("Sikeres bejelentkezés!")
+				setTimeout(() => navigate('/home'), 2000);
+			} else {
+				alert.error("Sikertelen bejelentkezés!");
 			}
 		})
 	}
@@ -39,27 +43,29 @@ function LoginPage(props) {
 
 
  	return (
-		<div className='auth-form-container'>
-			<form className='login-form' onSubmit={handleSubmit}>
-				<h1>Belépés</h1>
-				<label htmlFor="user">Felhasználónév/Email</label>
-				<input value={formValues.user}
-          		onChange={handleChange}
-					type="text" 
-					placeholder="felhasznalonev/emailcimed@gmail.com" 
-					id="user" name="user">
-				</input>
-				<label htmlFor="password">Jelszó</label>
-				<input value={formValues.password}
-          		onChange={handleChange}
-					type="password" 
-					placeholder="*********" 
-					id="password" name="password">
-				</input>
-				<button type="submit">Belépés</button>
-			</form>
-			<button className='link-btn' onClick={() => navigate("/register")}>Nincs még fiókom.</button>
-	 	</div>
+		<div className="al-center">
+			<div className='auth-form-container'>
+				<form className='login-form' onSubmit={handleSubmit}>
+					<h1>Belépés</h1>
+					<label htmlFor="user">Felhasználónév/Email</label>
+					<input value={formValues.user}
+								onChange={handleChange}
+						type="text"
+						placeholder="felhasznalo / email"
+						id="user" name="user">
+					</input>
+					<label htmlFor="password">Jelszó</label>
+					<input value={formValues.password}
+								onChange={handleChange}
+						type="password"
+						placeholder="*********"
+						id="password" name="password">
+					</input>
+					<button type="submit">Belépés</button>
+				</form>
+				<button className='link-btn' onClick={() => navigate("/register")}>Nincs még fiókom.</button>
+					</div>
+		</div>
   )
 }
 

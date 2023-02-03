@@ -35,7 +35,7 @@ export default function Search({ panTo }) {
 	  try {
 		 const results = await getGeocode({ address });
 		 const { lat, lng } = await getLatLng(results[0]);
-		 panTo({ lat, lng });
+		 panTo({ lat, lng }, 8);
 	  } catch (error) {
 		 console.log("Error: ", error);
 	  }
@@ -43,18 +43,19 @@ export default function Search({ panTo }) {
  
 	return (
 	  <div className="search">
+		<img src="icon/search.png" alt="search icon" />
 		 <Combobox onSelect={handleSelect}>
 			<ComboboxInput
 			  value={value}
 			  onChange={handleInput}
 			  disabled={!ready}
-			  placeholder="Enter an address"
+			  placeholder="Írj be egy címet"
 			/>
-			<ComboboxPopover>
+			<ComboboxPopover className="search-list">
 			  <ComboboxList>
 				 {status === "OK" &&
 					data.map(({ id, description }) => (
-					  <ComboboxOption key={id} value={description} />
+					  <ComboboxOption key={id} value={description} className="search-options"/>
 					))}
 			  </ComboboxList>
 			</ComboboxPopover>

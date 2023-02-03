@@ -11,14 +11,15 @@ import mapStyles from "./mapStyles";
 import Search from "./components/Search";
 import Locate from "./components/Locate";
 import TimePicker from "react-time-picker";
-import "./style/mapPagestyle.css"
+import { useAlert } from "react-alert";
+import "./style/mapPagestyle.css";
 /* #endregion */
 
 /* #region  Constans */
 const libraries = ["places"];
 const mapContainerStyle = {
-  width: "150vh",
-  height: "60vh",
+  width: "45rem",
+  height: "25rem",
 };
 const center = {
   lat: parseFloat(47.22238413761323),
@@ -44,31 +45,31 @@ export default function MapPage() {
   const [endTime, setEndTime] = useState("0:00");
   const [showingInfo, setSInfo] = useState(false);
   const [markerPending, setMarkerPending] = useState({});
+  const alert = useAlert();
 
   /* #region  Fetching */
-  // get markers
+  async function fetchMarkers() {
+    fetch(`http://localhost:9000/get-userdata`, {
+      method: "POST",
+      crossDomain: true,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+      body: JSON.stringify({
+        token: window.localStorage.getItem("token"),
+      }),
+    })
+      .then((response) =>
+        !response.ok ? alert.error("Sikertelen lekérdezés") : response.json()
+      )
+      .then((data) => {
+        setMarkers(data.data.markers);
+        setLoggedUser(data.data);
+      });
+  }
   useEffect(() => {
-    async function fetchMarkers() {
-      fetch(`http://localhost:9000/get-userdata`, {
-        method: "POST",
-        crossDomain: true,
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          "Access-Control-Allow-Origin": "*",
-        },
-        body: JSON.stringify({
-          token: window.localStorage.getItem("token"),
-        }),
-      })
-        .then((response) =>
-          !response.ok ? alert("Sikertelen lekérdezés") : response.json()
-        )
-        .then((data) => {
-          setMarkers(data.data.markers);
-          setLoggedUser(data.data);
-        });
-    }
     fetchMarkers();
   }, []);
 
@@ -88,7 +89,7 @@ export default function MapPage() {
         }),
       });
       if (!response.ok) {
-        alert("Sikertelen adat lekérdezés");
+        alert.error("Sikertelen adat lekérdezés");
         return;
       }
       const json = await response.json();
@@ -112,7 +113,7 @@ export default function MapPage() {
       }),
     });
     if (!response.ok) {
-      alert("Marker hozzáadás sikertelen");
+      alert.error("Marker hozzáadás sikertelen");
       return;
     }
     // const json = await response.json();
@@ -133,7 +134,7 @@ export default function MapPage() {
       }),
     });
     if (!response.ok) {
-      alert("Marker törlése sikertelen");
+      alert.error("Marker törlése sikertelen");
       return;
     }
     //const json = await response.json();
@@ -147,10 +148,10 @@ export default function MapPage() {
         "form[id='markerform'] input[name='sport']"
       ).value;
       if (sport === "") {
-        alert("Add meg a sport tevékenységet!");
+        alert.show("Add meg a sport tevékenységet!");
         return;
       } else if (startTime === "0:00" || endTime === "0:00") {
-        alert("Add meg az időpontot!");
+        alert.show("Add meg az időpontot!");
         return;
       } else {
         const timerange = {
@@ -168,9 +169,8 @@ export default function MapPage() {
         setSInfo(true);
         setMarkers((current) => [...current, newMarker]);
       }
-    }
-    else {
-      return alert("Van kijelölt marker!");
+    } else {
+      return alert.show("Van kijelölt marker!");
     }
   };
 
@@ -179,6 +179,7 @@ export default function MapPage() {
       if (JSON.stringify(marker) === JSON.stringify(selected)) {
         markers.splice(index, 1);
         deleteMarker(selected);
+        alert.success("Marker sikeresen törölve!");
         setSelected({});
         if (JSON.stringify(marker) === JSON.stringify(markerPending)) {
           setMarkerPending({});
@@ -204,30 +205,30 @@ export default function MapPage() {
     pushMarker(selected);
     setSelected({});
     setMarkerPending({});
+    alert.success("Sikeresen hozzáadva");
   }
 
   function Information() {
     if (showingInfo && Object.keys(selected).length > 0) {
-    return (
-      <InfoWindowF
-        position={{ lat: selected.lat, lng: selected.lng }}
-        onCloseClick={() => {
-          setSInfo(false)
-        }}
-      >
-        <div>
-          <h2>
-            <span>{selected.sport}</span>
-          </h2>
-          <p>{selected.time.start + " - " + selected.time.end}</p>
-          <button onClick={lc_removeMarker}>Törlés</button>
-        </div>
-      </InfoWindowF>
-    );}
+      return (
+        <InfoWindowF
+          position={{ lat: selected.lat, lng: selected.lng }}
+          onCloseClick={() => {
+            setSInfo(false);
+          }}
+        >
+          <div>
+            <h2>
+              <span>{selected.sport}</span>
+            </h2>
+            <p>{selected.time.start + " - " + selected.time.end}</p>
+            <button onClick={lc_removeMarker}>Törlés</button>
+          </div>
+        </InfoWindowF>
+      );
+    }
     return null;
   }
-
-
 
   /* #endregion */
 
@@ -237,27 +238,32 @@ export default function MapPage() {
     mapRef.current = map;
   }, []);
 
-  const panTo = useCallback(({ lat, lng }) => {
+  const panTo = useCallback(({ lat, lng }, zoom) => {
     mapRef.current.panTo({ lat, lng });
-    mapRef.current.setZoom(14);
+    mapRef.current.setZoom(zoom);
   }, []);
   /* #endregion */
 
   if (loadError) return "Error loading maps";
   if (!isLoaded) return "Loading Maps";
   return (
-    <div>
+    <div className="map-page">
       {/* Menu bar */}
       <div className="functions">
         <h1>Logo</h1>
-        <Search panTo={panTo} />
-        <Locate panTo={panTo} />
+        <div>
+          <Search panTo={panTo} />
+          <Locate panTo={panTo} />
+        </div>
       </div>
-
       <div className="Main">
         {/* Users list */}
         <div className="users-list">
-          <button onClick={() => setMarkers(loggedUser.markers)}>MY markers</button>
+          <div className="btn-mymarker">
+            <button onClick={() => setMarkers(loggedUser.markers)}>
+              MY markers
+            </button>
+          </div>
           <div>
             <ul>
               {users.map((user, index) => {
@@ -266,7 +272,7 @@ export default function MapPage() {
                     key={index}
                     className="user-box"
                     onClick={() => {
-                      setMarkers(user.markers)
+                      setMarkers(user.markers);
                     }}
                   >
                     <span key={user._id}>{user.username}</span>
@@ -275,7 +281,9 @@ export default function MapPage() {
                         return (
                           <li className="listed-marker" key={index}>
                             <span>{marker.sport}</span>
-                            <span>{marker.time.start + " - " + marker.time.end}</span>
+                            <span>
+                              {marker.time.start + " - " + marker.time.end}
+                            </span>
                           </li>
                         );
                       })}
