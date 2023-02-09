@@ -36,9 +36,9 @@ function Map({
     mapRef.current = map;
     
   }, []);
-  // pass them to locate
+  // pass them to header
   
-  
+
   const alert = useAlert();
   
   const onMapClick = (event) => {
