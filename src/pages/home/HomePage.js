@@ -1,7 +1,8 @@
-import React from "react";
-import NavBar from "./components/NavBar";
-import Welcome from "./components/Welcome";
-import "./style/Home.css";
+import {React, useEffect} from "react";
+import NavBar from "../../components/home/NavBar";
+import Welcome from "../../components/home/Welcome";
+import "../../assets/style/Home.css";
+
 
 function HomePage() {
   return (

@@ -1,6 +1,6 @@
-import React,  { createContext } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './style/index.css';
+import './assets/style/index.css';
 import App from './App';
 import { transitions, positions, Provider as AlertProvider } from 'react-alert'
 import AlertTemplate from 'react-alert-template-oldschool-dark'

@@ -43,7 +43,7 @@ export default function Search({ panTo }) {
  
 	return (
 	  <div className="search">
-		<img src="icon/search.png" alt="search icon" />
+		<img src="icon/map/search.png" alt="search icon" />
 		 <Combobox onSelect={handleSelect}>
 			<ComboboxInput
 			  value={value}

@@ -1,25 +1,44 @@
-import "./style/Login.css";
+import "./assets/style/Login.css";
 import React from "react";
-import MapPage from "./MapPage";
-import HomePage from "./HomePage";
-import LoginPage from "./LoginPage";
-import RegisterPage from "./RegisterPage";
+import MapPage from "./pages/map/MapPage";
+import HomePage from "./pages/home/HomePage";
+import LoginPage from "./pages/login/LoginPage";
+import RegisterPage from "./pages/login/RegisterPage";
+import Profile from "./pages/profile/Profile";
+import AdminPage from "./pages/admin/AdminPage";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { useAlert } from "react-alert";
 
 function App() {
+  const isLoggedIn = window.localStorage.getItem("loggedIn");
+  const userType = window.localStorage.getItem("userType");
+  const alert = useAlert();
+
   return (
     <div className="App">
       <BrowserRouter>
         <Routes>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
           <Route path="/home" element={<HomePage />} />
+          <Route
+            path="/login"
+            element={isLoggedIn === "true" ? <HomePage /> : <LoginPage />}
+          />
+          <Route
+            path="/register"
+            element={isLoggedIn === "true" ? <HomePage /> : <RegisterPage />}
+          />
+          <Route path="/profile" element={<Profile />} />
+          <Route
+            path="/admin"
+            element={
+              userType === "admin" ? (
+                <AdminPage />
+              ) : (
+                <HomePage />
+              )
+            }
+          />
           <Route path="/map" element={<MapPage />} />
-          {/* <Route path="/setting" element={} />
-          <Route path="/user" element={} />
-          <Route path="/chat" element={} />
-          <Route path="/sports" element={} />
-          <Route path="/info" element={} /> */}
           <Route path="*" element={<Navigate to="/home" />} />
         </Routes>
       </BrowserRouter>

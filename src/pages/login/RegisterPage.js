@@ -1,6 +1,6 @@
 import React, { useState} from 'react'
 import { useNavigate } from 'react-router-dom';
-import Validate from './components/Validate';
+import Validate from '../../components/login/Validate';
 import { useAlert } from 'react-alert'
 import { useRef } from 'react';
 
@@ -10,7 +10,6 @@ function RegisterPage() {
   const navigate = useNavigate();
   const initialValues = { username: "", email: "", password: "", passagain: "" };
   const [formValues, setFormValues] = useState(initialValues)
-  //const [formErrors, setFormErrors] = useState({})
   const [isSubmit, setIsSubmit] = useState(false)
   const formErrors = useRef({})
 
@@ -40,7 +39,7 @@ function RegisterPage() {
       })
         .then((res) => res.json())
         .then(data => {
-          if (data.status=="ok") { 
+          if (data.status==="ok") { 
             alert.success("Sikeres regisztráció!")
             setTimeout(() => navigate('/login'), 2000)
           } 

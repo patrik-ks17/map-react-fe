@@ -30,9 +30,12 @@ function LoginPage() {
       })
         .then((res) => res.json())
         .then(data => {
-			if (data.status=="ok") { 
-				window.localStorage.setItem("token",data.data);
-				alert.success("Sikeres bejelentkezés!")
+			if (data.status==="ok") { 
+				window.localStorage.setItem("token",data.data.token);
+				window.localStorage.setItem("loggedIn", true);
+				window.localStorage.setItem("userType", data.data.usertype);
+				console.log(data.data)
+				alert.success("Sikeres bejelentkezés!");
 				setTimeout(() => navigate('/home'), 2000);
 			} else {
 				alert.error("Sikertelen bejelentkezés!");
