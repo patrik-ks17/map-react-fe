@@ -1,15 +1,18 @@
 import React from "react";
 
 function UserList({ users, loggedUser, setMarkers, panTo }) {
-  function panToMarker(panTo, lat, lng) {
+  function panToMarker(lat, lng) {
     try {
-      panTo({
-        lat: lat,
-        lng: lng,
-       }, 14);
-  } catch (e) {
-    console.error(e);
-  }
+      panTo(
+        {
+          lat: lat,
+          lng: lng,
+        },
+        12
+      );
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   return (
@@ -23,14 +26,15 @@ function UserList({ users, loggedUser, setMarkers, panTo }) {
         <ul>
           {users.map((user, index) => {
             return (
-              <div
-                key={index}
-                className="user-box"
-                onClick={() => {
-                  setMarkers(user.markers);
-                }}
-              >
-                <span key={user._id}>{user.username}</span>
+              <div key={index} className="user-box">
+                <p
+                  key={user._id}
+                  onClick={() => {
+                    setMarkers(user.markers);
+                  }}
+                >
+                  {user.username}
+                </p>
                 <ul>
                   {user.markers.map((marker, index) => {
                     return (
@@ -38,7 +42,7 @@ function UserList({ users, loggedUser, setMarkers, panTo }) {
                         className="listed-marker"
                         key={index}
                         onClick={() => {
-                          panToMarker(panTo, marker.lat, marker.lng);
+                          panToMarker(marker.lat, marker.lng);
                         }}
                       >
                         <span>{marker.sport}</span>

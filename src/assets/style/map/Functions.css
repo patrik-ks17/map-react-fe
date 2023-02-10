@@ -1,0 +1,89 @@
+.functions {
+  width: 100%;
+  display: block;
+  margin-bottom: 0.2rem;
+}
+.functions div {
+  display: flex;
+  margin-bottom: 0.4rem;
+}
+
+h1 {
+  top: 0;
+  color: whitesmoke;
+  z-index: 10;
+  margin: 0;
+  padding: 0;
+}
+
+.search {
+  margin-left: 300px;
+  max-width: 400px;
+  z-index: 3;
+}
+.search input {
+  background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.1) 0%,
+      rgba(255, 255, 255, 0.4) 100%
+    ),
+    linear-gradient(
+      90.24deg,
+      #545454 11.75%,
+      rgba(71, 85, 93, 0.28) 29.39%,
+      rgba(76, 90, 86, 0.42) 49.19%,
+      rgba(123, 136, 132, 0.485) 71.57%,
+      rgba(79, 94, 67, 0.511) 94.38%
+    );
+  border: 1px solid;
+  border-image-source: linear-gradient(
+    90.24deg,
+    #ffffff 11.75%,
+    rgba(71, 85, 93, 0.28) 29.39%,
+    rgba(76, 90, 86, 0.52) 49.19%,
+    rgba(123, 136, 132, 0.67) 71.57%,
+    rgba(79, 94, 67, 0.87) 94.38%
+  );
+  padding: 0.2rem;
+  font-size: 1.1rem;
+  width: 100%;
+  border-radius: 10px;
+}
+.search input::placeholder {
+  color: black;
+}
+.search img {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+}
+.search-list {
+  text-shadow: 1px 1px black;
+  color: white;
+  background: rgba(0, 0, 0, 0.834);
+  z-index: 5;
+}
+.search-options:hover {
+  background: rgb(108, 138, 157);
+}
+
+.locate {
+  background-color: rgba(0, 0, 0, 0);
+  font-size: 0.7rem;
+  margin-left: 30px;
+  margin-bottom: 15px;
+  border: none;
+  z-index: 10;
+}
+.locate img {
+  margin: auto;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+.locate:hover {
+ transform: scale(1.1rem);
+}

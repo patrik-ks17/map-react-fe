@@ -41,12 +41,13 @@ function MarkerSetting({
         <span>Sport</span>
         <input type={"text"} name={"sport"} defaultValue=""></input>
         <span>Kezdés</span>
-        <TimePicker disableClock onChange={setStartTime} value={startTime} />
+        <TimePicker disableClock onChange={setStartTime} value={startTime} className="timepicker" />
         <span>Vége</span>
         <TimePicker
           disableClock
           onChange={(e) => setEndTime(e)}
           value={endTime}
+          className="timepicker"
         />
         <button type={"button"} onClick={lc_editMarker}>
           Felvesz

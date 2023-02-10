@@ -1,7 +1,7 @@
-import { useCallback, useRef } from "react";
 import mapStyles from "../../assets/mapStyles";
 import { GoogleMap, Marker, InfoWindowF } from "@react-google-maps/api";
 import { useAlert } from "react-alert";
+import ToChatGroup from "../chat/ToChatGroup";
 
 const mapContainerStyle = {
   width: "45rem",
@@ -13,8 +13,15 @@ const center = {
 };
 const options = {
   styles: mapStyles,
-  disableDefaultUI: true,
+  // disableDefaultUI: true,
   zoomControl: true,
+  fullscreenControl: false,
+  mapTypeControl: true,
+  mapTypeControlOptions: {
+    mapTypeIds: ["roadmap", "hybrid"],
+  },
+  tilt: 25,
+
 };
 
 function Map({
@@ -28,19 +35,12 @@ function Map({
   endTime,
   markerPending,
   setMarkerPending,
-  deleteMarker,
+  DeleteMarker,
+  onMapLoad,
+  loggedUser,
 }) {
-  // a
-  const mapRef = useRef();
-  const onMapLoad = useCallback((map) => {
-    mapRef.current = map;
-    
-  }, []);
-  // pass them to header
-  
-
   const alert = useAlert();
-  
+
   const onMapClick = (event) => {
     if (Object.keys(markerPending).length === 0) {
       const sport = document.querySelector(
@@ -74,6 +74,7 @@ function Map({
   };
 
   function Information() {
+    const { myMarker, marker, index } = isMyMarker();
     if (showingInfo && Object.keys(selected).length > 0) {
       return (
         <InfoWindowF
@@ -87,7 +88,14 @@ function Map({
               <span>{selected.sport}</span>
             </h2>
             <p>{selected.time.start + " - " + selected.time.end}</p>
-            <button onClick={lc_removeMarker}>Törlés</button>
+            <button name={"chat"} onClick={ToChatGroup}>
+              Chat
+            </button>
+            {myMarker === true ? (
+              <button name={"delete"} onClick={lc_removeMarker}>
+                Törlés
+              </button>
+            ) : null}
           </div>
         </InfoWindowF>
       );
@@ -96,17 +104,37 @@ function Map({
   }
 
   function lc_removeMarker() {
+    const { myMarker, marker, index } = isMyMarker();
+    if (myMarker) {
+      markers.splice(index, 1);
+      DeleteMarker(selected);
+      alert.success("Jelölő sikeresen törölve!");
+      setSelected({});
+      if (JSON.stringify(marker) === JSON.stringify(markerPending)) {
+        setMarkerPending({});
+      }
+    }
+  }
+
+  function isMyMarker() {
+    let myMarker = false;
+    let marker = "";
+    let index = -1;
     markers.map((marker, index) => {
-      if (JSON.stringify(marker) === JSON.stringify(selected)) {
-        markers.splice(index, 1);
-        deleteMarker(selected);
-        alert.success("Jelölő sikeresen törölve!");
-        setSelected({});
-        if (JSON.stringify(marker) === JSON.stringify(markerPending)) {
-          setMarkerPending({});
-        }
+      if (
+        JSON.stringify(marker) === JSON.stringify(selected) &&
+        loggedUser !== undefined
+      ) {
+        loggedUser.markers.map((usermarker) => {
+          if (JSON.stringify(usermarker) === JSON.stringify(selected)) {
+            myMarker = true;
+            marker = marker;
+            index = index;
+          }
+        });
       }
     });
+    return { myMarker, marker, index };
   }
 
   return (

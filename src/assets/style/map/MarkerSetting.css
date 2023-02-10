@@ -1,0 +1,66 @@
+.set-marker {
+  background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.1) 0%,
+      rgba(255, 255, 255, 0.4) 100%
+    ),
+    linear-gradient(
+      90.24deg,
+      #ffffff 11.75%,
+      rgba(71, 85, 93, 0.28) 29.39%,
+      rgba(76, 90, 86, 0.52) 49.19%,
+      rgba(123, 136, 132, 0.67) 71.57%,
+      rgba(79, 94, 67, 0.87) 94.38%
+    );
+
+  border: 1px solid;
+  border-image-source: linear-gradient(
+    90.24deg,
+    #ffffff 11.75%,
+    rgba(71, 85, 93, 0.28) 29.39%,
+    rgba(76, 90, 86, 0.52) 49.19%,
+    rgba(123, 136, 132, 0.67) 71.57%,
+    rgba(79, 94, 67, 0.87) 94.38%
+  );
+  justify-content: center;
+  font-size: 0.9rem;
+  height: fit-content;
+  border-radius: 10px;
+}
+
+#markerform {
+	width: 80%;
+	margin: 1rem;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#markerform > span,
+button {
+  display: block;
+}
+
+#markerform > input[type="text"] {
+  background-color: #cdcccc;
+  width: 80%;
+  border-radius: 10px;
+  font-size: 0.7rem;
+  padding: 0.1rem;
+  padding-left: 0.4rem;
+}
+.timepicker {
+  background-color: #cdcccc;
+  border-radius: 10px;
+}
+
+#markerform > button {
+  background-color: #cdcccc;
+  margin: auto;
+  margin-top: 10px;
+  border: 1px solid #000;
+  border-radius: 10px;
+}
+
+#markerform > button:hover {
+  cursor: pointer;
+}

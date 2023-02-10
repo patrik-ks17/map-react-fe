@@ -34,7 +34,6 @@ function LoginPage() {
 				window.localStorage.setItem("token",data.data.token);
 				window.localStorage.setItem("loggedIn", true);
 				window.localStorage.setItem("userType", data.data.usertype);
-				console.log(data.data)
 				alert.success("Sikeres bejelentkezés!");
 				setTimeout(() => navigate('/home'), 2000);
 			} else {

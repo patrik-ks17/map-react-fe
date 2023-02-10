@@ -35,7 +35,7 @@ export default function Search({ panTo }) {
 	  try {
 		 const results = await getGeocode({ address });
 		 const { lat, lng } = await getLatLng(results[0]);
-		 panTo({ lat, lng }, 8);
+		 panTo({ lat, lng }, 13);
 	  } catch (error) {
 		 console.log("Error: ", error);
 	  }
@@ -49,7 +49,7 @@ export default function Search({ panTo }) {
 			  value={value}
 			  onChange={handleInput}
 			  disabled={!ready}
-			  placeholder="Írj be egy címet"
+			  placeholder="Keresés..."
 			/>
 			<ComboboxPopover className="search-list">
 			  <ComboboxList>

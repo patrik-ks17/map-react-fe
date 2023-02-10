@@ -1,6 +1,7 @@
 import React from "react";
 import { useAlert } from "react-alert";
 import { useNavigate } from "react-router-dom";
+import Logout from "./../login/Logout";
 
 function NavBar() {
   const navigate = useNavigate();
@@ -19,20 +20,13 @@ function NavBar() {
       }
     } else if (isLoggedIn === "true" && page === "login") {
       if (userType === "admin") {
-        navigate("/admin")
+        navigate("/admin");
       } else {
-        navigate("/profile")
+        navigate("/profile");
       }
     } else {
       navigate("/" + page);
     }
-  }
-
-  function logOut() {
-    window.localStorage.setItem("loggedIn", false);
-    window.localStorage.removeItem("token");
-    alert.info("Sikeresen Kijelentkezett!");
-    window.location.reload(false);
   }
 
   return (
@@ -83,7 +77,7 @@ function NavBar() {
             <img
               src="icon/navbar/logout.png"
               alt="logout"
-              onClick={(e) => logOut(e)}
+              onClick={() => Logout(alert)}
             ></img>
           </li>
         ) : null}

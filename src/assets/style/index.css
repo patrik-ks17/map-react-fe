@@ -26,11 +26,32 @@ code {
 
 .App {
 	text-align: center;
-	display: flex;
-	justify-content: center;
 }
+
 
 .al-center {
   align-items: center;
   display: flex;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 9px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #fffefedc; 
+  border-radius: 5px 10px 10px 5px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #6e6e6e; 
+  border-radius: 5px 10px 10px 5px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #252525; 
 }

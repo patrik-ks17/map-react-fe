@@ -1,4 +1,4 @@
-export default function Locate({ panTo }) {
+export default function Location({ panTo }) {
   return (
     <button
       className="locate"
@@ -8,7 +8,7 @@ export default function Locate({ panTo }) {
              panTo({
             	lat: position.coords.latitude,
             	lng: position.coords.longitude,
-             });
+             }, 14);
           },
           (error) => console.log(error)
         );
