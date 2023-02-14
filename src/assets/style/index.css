@@ -55,3 +55,11 @@ code {
 ::-webkit-scrollbar-thumb:hover {
   background: #252525; 
 }
+
+h1 {
+  top: 0;
+  color: whitesmoke;
+  z-index: 10;
+  padding: 0;
+  text-shadow: 0.1rem 0.07rem black;
+}

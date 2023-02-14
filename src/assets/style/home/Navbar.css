@@ -1,10 +1,4 @@
-h1 {
-	margin-bottom: 2rem;
-}
-
 .navbar {
-	display: flex;
-	justify-content: center;
 	border-radius: 10px;
 	border: 1px solid black;
 	background-color: rgba(0, 0, 0, 0.507);
@@ -42,17 +36,4 @@ h1 {
 img {
 	width: 30px;
 	height: 30px;
-}
-
-.welcome {
-	border-radius: 10px;
-	border: 1px solid black;
-	background-color: rgba(0, 0, 0, 0.507);
-	color: whitesmoke;
-	padding: 1rem 2rem;
-}
-
-.welcome ul {
-	text-align: left;
-	text-shadow: 2px 2px black;
 }

@@ -1,0 +1,36 @@
+.back-home-page {
+  background-image: url("/public/img/home-bg.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+}
+
+.back-home-page >div {
+  backdrop-filter: blur(10px);
+  width: 100vw;
+  height: 100vh;
+}
+
+.home-page {
+  justify-content: center;
+  display: grid;
+}
+
+h1 {
+  margin-bottom: 2rem;
+}
+
+.welcome {
+  border-radius: 10px;
+  border: 1px solid black;
+  background-color: rgba(0, 0, 0, 0.507);
+  color: whitesmoke;
+  padding: 1rem 2rem;
+}
+
+.welcome ul {
+  text-align: left;
+  text-shadow: 0.1rem 0.07rem black;
+}

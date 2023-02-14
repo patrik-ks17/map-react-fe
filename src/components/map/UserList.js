@@ -8,7 +8,7 @@ function UserList({ users, loggedUser, setMarkers, panTo }) {
           lat: lat,
           lng: lng,
         },
-        12
+        14
       );
     } catch (e) {
       console.error(e);

@@ -1,10 +1,9 @@
 import "@reach/combobox/styles.css";
-import "../../assets/style/map/MapPage.css";
 import "../../assets/style/map/Functions.css";
 import "../../assets/style/map/UserList.css";
-import "../../assets/style/map/Google.css";
+import "../../assets/style/map/MapPage.css";
 import "../../assets/style/map/MarkerSetting.css";
-import {useState, useEffect, useRef, useCallback} from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useLoadScript } from "@react-google-maps/api";
 import Header from "../../components/map/header/Header";
 import UserList from "../../components/map/UserList";
@@ -13,7 +12,7 @@ import MarkerSetting from "../../components/map/MarkerSetting";
 import DeleteMarker from "./../../hooks/DeleteMarker";
 import FetchMarkers from "../../hooks/FetchMarkers";
 import FetchUsers from "./../../hooks/FetchUsers";
-
+import Nav from "../../components/Nav"
 
 const libraries = ["places"];
 
@@ -42,11 +41,9 @@ export default function MapPage() {
     FetchUsers(setUsers);
   }, []);
 
-
   const mapRef = useRef();
   const onMapLoad = useCallback((map) => {
     mapRef.current = map;
-    console.log(map.getRenderingType())
   }, []);
 
   const panTo = useCallback(({ lat, lng }, zoom) => {
@@ -58,40 +55,43 @@ export default function MapPage() {
   if (!isLoaded) return "Loading Map";
   return (
     <div className="back-map-page">
-      <div className="map-page">
-        <Header panTo={panTo}/>
-        <div className="Main">
-          <UserList
-            users={users}
-            loggedUser={loggedUser}
-            setMarkers={setMarkers}
-            panTo={panTo}
-          />
-          <Map
-            showingInfo={showingInfo}
-            setShowingInfo={setShowingInfo}
-            markers={markers}
-            setMarkers={setMarkers}
-            selected={selected}
-            setSelected={setSelected}
-            startTime={startTime}
-            endTime={endTime}
-            markerPending={markerPending}
-            setMarkerPending={setMarkerPending}
-            DeleteMarker={DeleteMarker}
-            onMapLoad={onMapLoad}
-            loggedUser={loggedUser}
-          />
-          <MarkerSetting
-            markers={markers}
-            selected={selected}
-            setSelected={setSelected}
-            startTime={startTime}
-            setStartTime={setStartTime}
-            endTime={endTime}
-            setEndTime={setEndTime}
-            setMarkerPending={setMarkerPending}
-          />
+      <div>
+        <div className="map-page">
+        {/* <Nav/> */}
+          <Header panTo={panTo} />
+          <div className="Main">
+            <UserList
+              users={users}
+              loggedUser={loggedUser}
+              setMarkers={setMarkers}
+              panTo={panTo}
+            />
+            <Map
+              showingInfo={showingInfo}
+              setShowingInfo={setShowingInfo}
+              markers={markers}
+              setMarkers={setMarkers}
+              selected={selected}
+              setSelected={setSelected}
+              startTime={startTime}
+              endTime={endTime}
+              markerPending={markerPending}
+              setMarkerPending={setMarkerPending}
+              DeleteMarker={DeleteMarker}
+              onMapLoad={onMapLoad}
+              loggedUser={loggedUser}
+            />
+            <MarkerSetting
+              markers={markers}
+              selected={selected}
+              setSelected={setSelected}
+              startTime={startTime}
+              setStartTime={setStartTime}
+              endTime={endTime}
+              setEndTime={setEndTime}
+              setMarkerPending={setMarkerPending}
+            />
+          </div>
         </div>
       </div>
     </div>

@@ -1,4 +1,3 @@
-import "./assets/style/Login.css";
 import React from "react";
 import MapPage from "./pages/map/MapPage";
 import HomePage from "./pages/home/HomePage";
@@ -38,6 +37,7 @@ function App() {
               )
             }
           />
+          {/* <Route path="/chat" element={<ChatPage />} /> */}
           <Route path="/map" element={<MapPage />} />
           <Route path="*" element={<Navigate to="/home" />} />
         </Routes>

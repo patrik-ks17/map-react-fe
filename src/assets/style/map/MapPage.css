@@ -1,12 +1,49 @@
-/* Map & Page */
-.App {
+.back-map-page {
   background-image: url("/public/img/map-bg.jpg");
   background-repeat: no-repeat;
   background-size: cover;
+  width: 100vw;
+  height: 100vh;
 }
 
+.back-map-page > div {
+  backdrop-filter: blur(10px);
+  align-items: center;
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  flex-direction: column;
+}
 
-/* users list */
+.map-page {
+  overflow-y: hidden;
+  overflow-x: hidden;
+  width: fit-content;
+  height: fit-content;
+}
 
-/* marker settings */
+.Main {
+  display: flex;
+}
 
+.google-map {
+  width: 45rem;
+  height: 25rem;
+  margin: 2rem;
+  margin-top: 0;
+  border: 1px solid;
+  border-image-source: linear-gradient(
+    90.24deg,
+    #ffffff 11.75%,
+    rgba(71, 85, 93, 0.28) 29.39%,
+    rgba(76, 90, 86, 0.52) 49.19%,
+    rgba(123, 136, 132, 0.67) 71.57%,
+    rgba(79, 94, 67, 0.87) 94.38%
+  );
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+.gm-style-mtc button {
+  content: "Muhold";
+}

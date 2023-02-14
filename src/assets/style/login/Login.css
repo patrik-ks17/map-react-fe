@@ -1,0 +1,110 @@
+.back-login-page,
+.back-reg-page {
+  background-repeat: no-repeat;
+  background-size: cover;
+  width: 100vw;
+  height: 100vh;
+}
+
+.back-login-page > div, .back-reg-page > div {
+  backdrop-filter: blur(10px);
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  flex-direction: column;
+}
+
+.back-login-page {
+  background-image: url("/public/img/login-bg.jpg");
+}
+.back-reg-page {
+	background-image: url("/public/img/reg-bg.jpg");
+}
+
+.login-form, .register-form {
+  background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.16) 0%,
+      rgba(255, 255, 255, 0.4) 100%
+    ),
+    linear-gradient(
+      90.24deg,
+      #ffffff96 10.75%,
+      rgba(71, 85, 93, 0.517) 29.39%,
+      rgba(76, 90, 86, 0.582) 49.19%,
+      rgba(123, 136, 132, 0.562) 71.57%,
+      rgba(143, 166, 149, 0.588) 94.38%
+    );
+  padding: 2rem 8rem;
+  border-radius: 10px;
+  color: white;
+  text-shadow: 0.1rem 0.07rem black;
+}
+
+.login-page,
+.login-form,
+.reg-page,
+.register-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.login-form > label,
+.register-form > label {
+  text-align: left;
+  padding: 0.25rem 0;
+}
+
+.login-form > input,
+.register-form > input {
+  margin: 0 0.5rem 0.1rem 0.5rem;
+  padding: 0.3rem;
+  padding-left: 0.4rem;
+}
+
+.reg-btn:hover, .login-btn:hover, .link-btn:hover { 
+	cursor: pointer;
+	font-style: italic;
+}
+
+.link-btn {
+  text-align: left;
+  background: none;
+  text-decoration: underline;
+  border: none;
+  font-size: 0.7rem;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+  color: black;
+  text-shadow: none;
+}
+
+.login-btn,
+.reg-btn {
+  background: linear-gradient(
+    90.93deg,
+    rgba(255, 255, 255, 0.58) 0%,
+    rgba(255, 255, 255, 0.7) 100%
+  );
+  backdrop-filter: blur(2px);
+  border-radius: 10px;
+  padding: 0.5rem;
+  width: fit-content;
+  margin: auto;
+}
+
+.register-form > p {
+  color: red;
+  text-shadow: none;
+  font-size: 0.7rem;
+  margin-top: 0;
+  margin-bottom: 0.7rem;
+}
+
+.message-success {
+  margin: 2rem 0;
+  font-style: italic;
+  background-color: #2b2e31;
+}
